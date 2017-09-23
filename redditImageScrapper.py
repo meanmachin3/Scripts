@@ -20,9 +20,9 @@ def sanitize(link):
 def main():
     reddit = praw.Reddit(client_id='SDigpqbQpRbdgg',
                      client_secret='Ec-SZ4Fgyeo0FzvD03JVb2CwyNo',
-                     password='16071994',
+                     password='',
                      user_agent='testscript by /u/_meanmachine_',
-                     username='_meanmachine_');
+                     username='');
     subreddit = reddit.subreddit('alexandradaddario');
     submissions = []
     for submission in subreddit.top(limit=None):
