@@ -7,3 +7,4 @@ Scripts for automation of simple task
 **tinder_swipe.js** : Auto swipes profile on Tinder for desktop   
 **tinder_attractiveness.js** : Displays attractiveness of Tinder profile photos   
 **firetushar.sh** && **tushar.rb** : Auto trigger reply from specific sender based on email context   
+**weekly_report.sh**: Send a commit report to your boss
