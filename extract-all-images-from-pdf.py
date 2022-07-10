@@ -1,6 +1,4 @@
-/*
-* Usage: python extract-all-images-from-pdf.py file.pdf
-*/
+# Usage: python extract-all-images-from-pdf.py file.pdf
 
 import sys
 
