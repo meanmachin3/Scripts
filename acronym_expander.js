@@ -14,7 +14,7 @@
     // Common acronyms database
     const acronyms = {
         // Technology
-        'API': 'Application Programming Interface',
+        'API': 'Application Programming Interface'
     };
 
     // Create tooltip element
@@ -26,7 +26,7 @@
         padding: 8px 12px;
         border-radius: 6px;
         font-size: 14px;
-        font-family: Arial, sans-serif;s
+        font-family: Arial, sans-serif;
         z-index: 10000;
         box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         pointer-events: none;
@@ -108,8 +108,13 @@
         return false;
     }
 
-    // Main double-click handler
-    document.addEventListener('dblclick', function(event) {
+    // Alternative 1: Ctrl + Click (recommended)
+    document.addEventListener('click', function(event) {
+        if (!event.ctrlKey && !event.metaKey) {
+            hideTooltip();
+            return;
+        }
+        
         const word = getWordAtCursor(event);
         
         if (!word || !isLikelyAcronym(word)) return;
@@ -120,19 +125,71 @@
         if (expansion) {
             showTooltip(`${word}: ${expansion}`, event.clientX, event.clientY);
         } else {
-            // For unknown acronyms, show a generic message
             showTooltip(`${word}: Acronym (definition not available)`, event.clientX, event.clientY);
         }
         
-        // Prevent text selection on double-click
         event.preventDefault();
     });
 
-    // Hide tooltip on click elsewhere
+    // Alternative 2: Alt + Click (backup method)
     document.addEventListener('click', function(event) {
-        if (event.detail !== 2) { // Not a double-click
-            hideTooltip();
+        if (!event.altKey) return;
+        
+        const word = getWordAtCursor(event);
+        
+        if (!word || !isLikelyAcronym(word)) return;
+        
+        const upperWord = word.toUpperCase();
+        const expansion = acronyms[upperWord];
+        
+        if (expansion) {
+            showTooltip(`${word}: ${expansion}`, event.clientX, event.clientY);
+        } else {
+            showTooltip(`${word}: Acronym (definition not available)`, event.clientX, event.clientY);
         }
+        
+        event.preventDefault();
+    });
+
+    // Alternative 3: Right-click with selection
+    document.addEventListener('contextmenu', function(event) {
+        const selection = window.getSelection().toString().trim();
+        
+        if (!selection || !isLikelyAcronym(selection)) return;
+        
+        const upperWord = selection.toUpperCase();
+        const expansion = acronyms[upperWord];
+        
+        if (expansion) {
+            showTooltip(`${selection}: ${expansion}`, event.clientX, event.clientY);
+            event.preventDefault(); // Prevent context menu
+        }
+    });
+
+    // Alternative 4: Hover with Shift key held
+    let hoverTimeout;
+    document.addEventListener('mouseover', function(event) {
+        if (!event.shiftKey) return;
+        
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(() => {
+            if (!event.shiftKey) return;
+            
+            const word = getWordAtCursor(event);
+            
+            if (!word || !isLikelyAcronym(word)) return;
+            
+            const upperWord = word.toUpperCase();
+            const expansion = acronyms[upperWord];
+            
+            if (expansion) {
+                showTooltip(`${word}: ${expansion}`, event.clientX, event.clientY);
+            }
+        }, 500); // 500ms delay
+    });
+
+    document.addEventListener('mouseout', function() {
+        clearTimeout(hoverTimeout);
     });
 
     // Hide tooltip on scroll
@@ -141,5 +198,9 @@
     // Hide tooltip on key press
     document.addEventListener('keydown', hideTooltip);
 
-    console.log('Acronym Expander loaded! Double-click on acronyms to see their full forms.');
+    console.log('Acronym Expander loaded! Use one of these methods to expand acronyms:');
+    console.log('1. Ctrl+Click (or Cmd+Click on Mac) on an acronym');
+    console.log('2. Alt+Click on an acronym');  
+    console.log('3. Select an acronym and right-click');
+    console.log('4. Hold Shift and hover over an acronym (500ms delay)');
 })();
