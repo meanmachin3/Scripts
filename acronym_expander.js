@@ -14,7 +14,7 @@
     // Common acronyms database
     const acronyms = {
         // Technology
-        'API': 'Application Programming Interface',ss
+        'API': 'Application Programming Interface',
     };
 
     // Create tooltip element
